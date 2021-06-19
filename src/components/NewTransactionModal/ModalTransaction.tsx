@@ -43,6 +43,7 @@ export const ModalTransaction = ({ isOpen, onRequestClose }: ModalProps) => {
             type="button"
             onClick={() => setType("deposit")}
             isActive={type === "deposit"}
+            colorActive={"green"}
           >
             <img src={incomeImg} alt="Entrada" />
             <span>Entrada</span>
@@ -52,6 +53,7 @@ export const ModalTransaction = ({ isOpen, onRequestClose }: ModalProps) => {
             type="button"
             onClick={() => setType("withdraw")}
             isActive={type === "withdraw"}
+            colorActive={"red"}
           >
             <img src={outcomeImg} alt="Saida" />
             <span>Saida</span>
