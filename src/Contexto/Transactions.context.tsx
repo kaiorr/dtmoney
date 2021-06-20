@@ -26,6 +26,7 @@ interface TransactionsContextData {
   createTransaction: (transaction: TransactionInput) => Promise<void>;
 }
 
+//sem retorno array na interface
 export const TransactionsContext = createContext<TransactionsContextData>(
   {} as TransactionsContextData
 );

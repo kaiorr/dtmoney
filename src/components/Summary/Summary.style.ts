@@ -1,3 +1,4 @@
+import { darken } from "polished";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -10,7 +11,7 @@ export const Container = styled.div`
     background: var(--v-white);
     padding: 1.5rem 2rem;
     border-radius: 0.25rem;
-    color: var(--v-text-title);
+    color: var(--v-white);
 
     header {
       display: flex;
@@ -29,6 +30,14 @@ export const Container = styled.div`
     &.total {
       background: var(--v-green);
       color: var(--v-white);
+    }
+
+    &.top-deposit-background {
+      background: ${darken(0.25, "#33cc95")};
+    }
+
+    &.top-withdraw-background {
+      background: ${darken(0.25, "#e52e4d")};
     }
   }
 `;
