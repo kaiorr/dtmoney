@@ -14,7 +14,22 @@ interface TransactionsProviderProps {
   children: ReactNode;
 }
 
-export const TransactionsContext = createContext<TransactionItems[]>([]);
+interface TransactionInput {
+  title: string;
+  amount: number;
+  type: string;
+  category: string;
+}
+
+interface TransactionsContextData {
+  transactions: TransactionItems[];
+  createTransaction: (transaction: TransactionInput) => Promise<void>;
+}
+
+//sem retorno array na interface
+export const TransactionsContext = createContext<TransactionsContextData>(
+  {} as TransactionsContextData
+);
 
 export const TransactionsProvider = ({
   children,
@@ -27,8 +42,19 @@ export const TransactionsProvider = ({
       .then((response) => setTransactions(response.data.transactions));
   }, []);
 
+  async function createTransaction(transactionInput: TransactionInput) {
+    const response = await api.post("/transactions", {
+      ...transactionInput,
+      createdAt: new Date(),
+    });
+    const { transaction } = response.data;
+
+    //vetor de transações, seta atual
+    setTransactions([...transactions, transaction]);
+  }
+
   return (
-    <TransactionsContext.Provider value={transactions}>
+    <TransactionsContext.Provider value={{ transactions, createTransaction }}>
       {children}
     </TransactionsContext.Provider>
   );

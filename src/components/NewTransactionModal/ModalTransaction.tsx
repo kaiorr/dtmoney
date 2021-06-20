@@ -7,8 +7,8 @@ import {
 import closeModalImg from "../../assets/close.svg";
 import incomeImg from "../../assets/income.svg";
 import outcomeImg from "../../assets/outcome.svg";
-import { FormEvent, useState } from "react";
-import { api } from "../../services/api";
+import { FormEvent, useContext, useState } from "react";
+import { TransactionsContext } from "../../Contexto/Transactions.context";
 
 interface ModalProps {
   isOpen: boolean;
@@ -16,22 +16,28 @@ interface ModalProps {
 }
 
 export const ModalTransaction = ({ isOpen, onRequestClose }: ModalProps) => {
-  const [titleTransaction, setTitleTransaction] = useState("");
-  const [valueTransaction, setValueTransaction] = useState(0);
-  const [categoryTransaction, setCategoryTransaction] = useState("");
+  const { createTransaction } = useContext(TransactionsContext);
+
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState("");
   const [type, setType] = useState("deposit");
 
-  function handleCreateNewTransaction(e: FormEvent) {
+  async function handleCreateNewTransaction(e: FormEvent) {
     e.preventDefault();
 
-    const data = {
-      titleTransaction,
-      valueTransaction,
+    await createTransaction({
+      title,
+      amount,
+      category,
       type,
-      categoryTransaction,
-    };
+    });
 
-    api.post("/transactions", data);
+    setTitle("");
+    setAmount(0);
+    setCategory("");
+    setType("deposit");
+    onRequestClose();
   }
 
   return (
@@ -54,15 +60,15 @@ export const ModalTransaction = ({ isOpen, onRequestClose }: ModalProps) => {
         <input
           type="text"
           placeholder="Titulo"
-          value={titleTransaction}
-          onChange={({ target }) => setTitleTransaction(target.value)}
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
         />
 
         <input
           type="number"
           placeholder="Valor"
-          value={valueTransaction}
-          onChange={({ target }) => setValueTransaction(Number(target.value))}
+          value={amount}
+          onChange={({ target }) => setAmount(Number(target.value))}
         />
 
         <TransactionTypeContainer>
@@ -90,8 +96,8 @@ export const ModalTransaction = ({ isOpen, onRequestClose }: ModalProps) => {
         <input
           type="text"
           placeholder="Categoria"
-          value={categoryTransaction}
-          onChange={({ target }) => setCategoryTransaction(target.value)}
+          value={category}
+          onChange={({ target }) => setCategory(target.value)}
         />
 
         <button type="submit">Cadastrar</button>
